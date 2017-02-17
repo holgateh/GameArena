@@ -85,6 +85,11 @@ public class Rectangle
 	{
 		return colour;
 	}
+	
+	public void setColour(String input)
+	{
+		this.colour = input;
+	}
 
 	public Rectangle(double x, double y, double w, double h, String col)
 	{
