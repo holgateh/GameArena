@@ -75,6 +75,11 @@ public class Ball
 	{
 		return colour;
 	}
+	
+	/**
+	 * Changes the colour of this Ball
+	 * @param input the new colour of this Ball
+	 */
 
 	public void setColour(String input)
 	{
