@@ -86,6 +86,11 @@ public class Rectangle
 		return colour;
 	}
 	
+	/**
+	 * Changes the colour of this Rectangle
+	 * @param input the new colour of this Rectangle
+	 */
+	
 	public void setColour(String input)
 	{
 		this.colour = input;
