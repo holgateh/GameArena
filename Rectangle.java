@@ -68,6 +68,15 @@ public class Rectangle
 		return width;
 	}
 
+    /**
+     * Defines a new width for this Rectangle.
+     * @param width The new width of this rectangle, in pixels.
+	 */
+	public void setWidth(double width)
+	{
+		this.width = width;
+	}
+
 	/**
 	 * Obtains the height of this Rectangle.
 	 * @return the height of this Rectangle,in pixels.
@@ -75,6 +84,15 @@ public class Rectangle
 	public double getHeight()
 	{
 		return height;
+	}
+
+    /**
+     * Defines a new width for this Rectangle.
+     * @param height The new height of this rectangle, in pixels.
+	 */
+	public void setHeight(double height)
+	{
+		this.height = height;
 	}
 
 	/**
