@@ -19,8 +19,8 @@ public class Ball
                                         // RGB values in the format #RRGGBB. e.g.
                                         //
                                         // Pure red is FF0000
-                                        // Pure red is 00FF00
-                                        // Pure red is 0000FF
+                                        // Pure lime is 00FF00
+                                        // Pure blue is 0000FF
 
 	/**
 	 * Obtains the current position of this Ball.
