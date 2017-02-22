@@ -70,8 +70,10 @@ public class Racer
         {
             if (road[i].getYPosition() > SCREEN_HEIGHT)
             {
+                double y = road[i].getYPosition();
                 road[i].remove();
                 road[i] = nextRoadSegment(); 
+                road[i].setYPosition(y - SCREEN_HEIGHT - ROAD_SEGMENT_HEIGHT);
             }
         }
     }
