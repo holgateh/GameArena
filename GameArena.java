@@ -29,6 +29,21 @@ import java.awt.event.WindowEvent;
  */
 public class GameArena 
 {
+	//Colours to chose from
+	public static final String BLACK = "#000000";
+ 	public static final String BLUE = "#0000ff";
+ 	public static final String CYAN = "#00ffff";
+	public static final String DARKGREY = "#a9a9a9";
+ 	public static final String GREY = "#808080";
+ 	public static final String GREEN = "#008000";
+ 	public static final String LIGHTGREY = "#d3d3d3";
+ 	public static final String MAGENTA = "#ff00ff";
+ 	public static final String ORANGE = "#ffa500";
+ 	public static final String PINK = "#ffc0cb";
+ 	public static final String RED = "#ff0000";
+	public static final String WHITE = "#ffffff";
+	public static final String YELLOW = "#ffff00";
+	
 	// Size of window
 	private int arenaWidth;
 	private int arenaHeight;
