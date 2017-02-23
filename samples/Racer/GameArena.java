@@ -1,5 +1,6 @@
 import java.util.*;
 import java.util.Collections;
+import java.util.concurrent.locks.*;
 import javafx.scene.input.KeyEvent;
 
 import javax.swing.JFrame;
@@ -29,6 +30,21 @@ import java.awt.event.WindowEvent;
  */
 public class GameArena 
 {
+	//Colours to chose from
+	public static final String BLACK = "#000000";
+ 	public static final String BLUE = "#0000ff";
+ 	public static final String CYAN = "#00ffff";
+	public static final String DARKGREY = "#a9a9a9";
+ 	public static final String GREY = "#808080";
+ 	public static final String GREEN = "#008000";
+ 	public static final String LIGHTGREY = "#d3d3d3";
+ 	public static final String MAGENTA = "#ff00ff";
+ 	public static final String ORANGE = "#ffa500";
+ 	public static final String PINK = "#ffc0cb";
+ 	public static final String RED = "#ff0000";
+	public static final String WHITE = "#ffffff";
+	public static final String YELLOW = "#ffff00";
+	
 	// Size of window
 	private int arenaWidth;
 	private int arenaHeight;
@@ -55,6 +71,9 @@ public class GameArena
     private Group root;
     private JFXPanel jfxPanel;
 
+    // Lock used to reduce flicker when rendering of large numbers of objects.
+    private ReentrantLock renderLock;
+
 	/**
      * Constructor. Creates an instance of the GameArena class, and displays a window on the
      * screen upon which shapes can be drawn.
@@ -67,6 +86,9 @@ public class GameArena
         this.arenaWidth = width;
         this.arenaHeight = height;
         this.objectCount = 0;
+
+        // Create a lock to reduce flicker on rendering
+        renderLock = new ReentrantLock();
 
         // Create a window
         window = new JFrame();
@@ -84,6 +106,8 @@ public class GameArena
 
         root = new Group();
         scene = new Scene(root, arenaWidth, arenaHeight, Color.BLACK);
+
+        renderLock.lock();
 
         Platform.runLater(new Runnable() {
             @Override
@@ -141,7 +165,6 @@ public class GameArena
 	public void exit()
 	{
 		this.exiting = true;
-        window.dispatchEvent(new WindowEvent(window, WindowEvent.WINDOW_CLOSING));
 	}
 
 	/**
@@ -149,79 +172,83 @@ public class GameArena
 	 */
 	private void frameUpdate ()
     {
-        if (!this.exiting)
+        if (this.exiting)
         {
-            // Remove any deleted objects from the scene.
-            synchronized (this)
+            window.dispatchEvent(new WindowEvent(window, WindowEvent.WINDOW_CLOSING));
+            return;
+        }
+
+        // Remove any deleted objects from the scene.
+        renderLock.lock();
+
+        for (Object o: removeList)
+        {
+            if (o instanceof Ball)
             {
-                for (Object o: removeList)
-                {
-                    if (o instanceof Ball)
-                    {
-                        Ball b = (Ball) o;
-                        javafx.scene.shape.Circle c = balls.get(b);
-                        root.getChildren().remove(c);
+                Ball b = (Ball) o;
+                javafx.scene.shape.Circle c = balls.get(b);
+                root.getChildren().remove(c);
 
-                        balls.remove(b);
-                    }
-
-                    if (o instanceof Rectangle)
-                    {
-                        Rectangle r = (Rectangle) o;
-                        javafx.scene.shape.Rectangle rectangle = rectangles.get(r);
-                        root.getChildren().remove(rectangle);
-
-                        rectangles.remove(r);
-                    }
-                }
-
-                removeList.clear();
-
-                // Add any new objects to the scene.
-                for (Object o: addList)
-                {
-                    if (o instanceof Ball)
-                    {
-                        Ball b = (Ball) o;
-                        javafx.scene.shape.Circle c = new javafx.scene.shape.Circle(0,0,b.getSize());
-                        root.getChildren().add(c);
-                        balls.put(b, c);
-                    }
-
-                    if (o instanceof Rectangle)
-                    {
-                        Rectangle r = (Rectangle) o;
-                        javafx.scene.shape.Rectangle rectangle = new javafx.scene.shape.Rectangle(0, 0, r.getWidth(), r.getHeight());
-                        root.getChildren().add(rectangle);
-                        rectangles.put(r, rectangle);
-                    }
-                }
-
-                addList.clear();
+                balls.remove(b);
             }
 
-            for(Map.Entry<Ball, javafx.scene.shape.Circle> entry : balls.entrySet())
+            if (o instanceof Rectangle)
             {
-                Ball b = entry.getKey();
-                javafx.scene.shape.Circle c = entry.getValue();
+                Rectangle r = (Rectangle) o;
+                javafx.scene.shape.Rectangle rectangle = rectangles.get(r);
+                root.getChildren().remove(rectangle);
 
-                c.setRadius(b.getSize());
-                c.setTranslateX(b.getXPosition());
-                c.setTranslateY(b.getYPosition());
-                c.setFill(getColourFromString(b.getColour()));
-            }
-
-            for(Map.Entry<Rectangle, javafx.scene.shape.Rectangle> entry : rectangles.entrySet())
-            {
-                Rectangle r = entry.getKey();
-                javafx.scene.shape.Rectangle rectangle = entry.getValue();
-                rectangle.setWidth(r.getWidth());
-                rectangle.setHeight(r.getHeight());
-                rectangle.setTranslateX(r.getXPosition() - r.getWidth()/2);
-                rectangle.setTranslateY(r.getYPosition() - r.getHeight()/2);
-                rectangle.setFill(getColourFromString(r.getColour()));
+                rectangles.remove(r);
             }
         }
+
+        removeList.clear();
+
+        // Add any new objects to the scene.
+        for (Object o: addList)
+        {
+            if (o instanceof Ball)
+            {
+                Ball b = (Ball) o;
+                javafx.scene.shape.Circle c = new javafx.scene.shape.Circle(0,0,b.getSize());
+                root.getChildren().add(c);
+                balls.put(b, c);
+            }
+
+            if (o instanceof Rectangle)
+            {
+                Rectangle r = (Rectangle) o;
+                javafx.scene.shape.Rectangle rectangle = new javafx.scene.shape.Rectangle(0, 0, r.getWidth(), r.getHeight());
+                root.getChildren().add(rectangle);
+                rectangles.put(r, rectangle);
+            }
+        }
+
+        addList.clear();
+
+        for(Map.Entry<Ball, javafx.scene.shape.Circle> entry : balls.entrySet())
+        {
+            Ball b = entry.getKey();
+            javafx.scene.shape.Circle c = entry.getValue();
+
+            c.setRadius(b.getSize());
+            c.setTranslateX(b.getXPosition());
+            c.setTranslateY(b.getYPosition());
+            c.setFill(getColourFromString(b.getColour()));
+        }
+
+        for(Map.Entry<Rectangle, javafx.scene.shape.Rectangle> entry : rectangles.entrySet())
+        {
+            Rectangle r = entry.getKey();
+            javafx.scene.shape.Rectangle rectangle = entry.getValue();
+            rectangle.setWidth(r.getWidth());
+            rectangle.setHeight(r.getHeight());
+            rectangle.setTranslateX(r.getXPosition() - r.getWidth()/2);
+            rectangle.setTranslateY(r.getYPosition() - r.getHeight()/2);
+            rectangle.setFill(getColourFromString(r.getColour()));
+        }
+
+        renderLock.unlock();
     }
 
 	//
@@ -329,8 +356,12 @@ public class GameArena
 	 */
 	public void pause()
 	{
+        renderLock.unlock();
+
 		try { Thread.sleep(18); }
 		catch (Exception e) {};
+
+        renderLock.lock();
 	}
 
 	/** 
