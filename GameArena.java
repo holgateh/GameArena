@@ -30,21 +30,6 @@ import java.awt.event.WindowEvent;
  */
 public class GameArena 
 {
-	//Colours to chose from
-	public static final String BLACK = "#000000";
- 	public static final String BLUE = "#0000ff";
- 	public static final String CYAN = "#00ffff";
-	public static final String DARKGREY = "#a9a9a9";
- 	public static final String GREY = "#808080";
- 	public static final String GREEN = "#008000";
- 	public static final String LIGHTGREY = "#d3d3d3";
- 	public static final String MAGENTA = "#ff00ff";
- 	public static final String ORANGE = "#ffa500";
- 	public static final String PINK = "#ffc0cb";
- 	public static final String RED = "#ff0000";
-	public static final String WHITE = "#ffffff";
-	public static final String YELLOW = "#ffff00";
-	
 	// Size of window
 	private int arenaWidth;
 	private int arenaHeight;
@@ -65,6 +50,7 @@ public class GameArena
 	private boolean down = false;
 	private boolean left = false;
 	private boolean right = false;
+	private boolean space = false;
 
     // JavaFX containers
     private Scene scene;
@@ -73,6 +59,8 @@ public class GameArena
 
     // Lock used to reduce flicker when rendering of large numbers of objects.
     private ReentrantLock renderLock;
+    private boolean initialised;
+    private boolean rendered;
 
 	/**
      * Constructor. Creates an instance of the GameArena class, and displays a window on the
@@ -99,6 +87,8 @@ public class GameArena
         this.arenaWidth = width;
         this.arenaHeight = height;
         this.objectCount = 0;
+        this.initialised = false;
+        this.rendered = false;
 
         // Create a lock to reduce flicker on rendering
         renderLock = new ReentrantLock();
@@ -144,6 +134,8 @@ public class GameArena
                     left = true;
                 if (keyEvent.getCode() == KeyCode.RIGHT) 
                     right = true;
+                if (keyEvent.getCode() == KeyCode.SPACE) 
+                    space = true;
             }
         };
 
@@ -157,6 +149,8 @@ public class GameArena
                     left = false;
                 if (keyEvent.getCode() == KeyCode.RIGHT) 
                     right = false;
+                if (keyEvent.getCode() == KeyCode.SPACE) 
+                    space = false;
             }
         };
 
@@ -187,9 +181,25 @@ public class GameArena
 	 */
 	private void frameUpdate ()
     {
+        if (!this.initialised)
+            return;
+
         if (this.exiting)
         {
-            window.dispatchEvent(new WindowEvent(window, WindowEvent.WINDOW_CLOSING));
+            addList.clear();
+            removeList.clear();
+            rectangles.clear();
+            balls.clear();
+            objectCount = 0;
+            initialised = false;
+
+            root.getChildren().clear();
+
+            if (window != null)
+                window.dispatchEvent(new WindowEvent(window, WindowEvent.WINDOW_CLOSING));
+
+            this.exiting = false;
+
             return;
         }
 
@@ -263,6 +273,7 @@ public class GameArena
             rectangle.setFill(getColourFromString(r.getColour()));
         }
 
+        rendered = true;
         renderLock.unlock();
     }
 
@@ -365,16 +376,29 @@ public class GameArena
 		}
 	}
 
-	/**
-	 * Pause for a 1/50 of a second. 
-	 * This method causes your program to delay for 1/50th of a second. You'll find this useful if you're trying to animate your application.
+  	/**
+     * Update the window to reflect all graphical objects added to this GameArena.
+     *
+     * This method will update the window to reflect the size, colour and position of
+     * all graphical objects (Balls, Rectangles etc). You must call this method
+     * each time you want the screen to update.
+     *
+     * This method also waits for approximately 1/50 of a second (the time it takes
+     * your computer display to refresh).  You'll find this useful if you're trying 
+     * to animate your application.
 	 */
-	public void pause()
+
+	public void update()
 	{
+        this.rendered = false;
+        this.initialised = true;
         renderLock.unlock();
 
-		try { Thread.sleep(18); }
-		catch (Exception e) {};
+        while(!this.rendered)
+        {
+            try { Thread.sleep(0); }
+            catch (Exception e) {};
+        }
 
         renderLock.lock();
 	}
@@ -431,6 +455,15 @@ public class GameArena
 	public boolean rightPressed()
 	{
 		return right;
+	}
+
+	/** 
+	 * Determines if the user is currently pressing the space bar.
+	 * @return true if the space bar is pressed, false otherwise.
+	 */
+	public boolean spacePressed()
+	{
+		return space;
 	}
 
     /** 
