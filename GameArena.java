@@ -23,7 +23,7 @@ import java.awt.event.WindowEvent;
  * Instances of the Ball and Rectangle classes can be added to an instance of this class to
  * draw and animate simple shapes on the screen. 
  *
- * <b>Note: Patched to prevent mulitple render objects with the same key, thus losing the render object reference</b>
+ * <b>Note:</b> Patched to prevent mulitple render objects with the same key, thus losing the render object reference
  *
  * @see Ball
  * @see Rectangle
