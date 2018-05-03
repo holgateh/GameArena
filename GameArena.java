@@ -376,7 +376,7 @@ public class GameArena
 
             // Add this ball to the draw list. Initially, with a null JavaFX entry, which we'll fill in later to avoid cross-thread operations...
             removeList.remove(b);
-            if( !balls.containsKey(l) )
+            if( !balls.containsKey(b) )
                 addList.add(b);
             objectCount++;
 		}
@@ -468,7 +468,7 @@ public class GameArena
 
             // Add this ball to the draw list. Initially, with a null JavaFX entry, which we'll fill in later to avoid cross-thread operations...
             removeList.remove(t);
-            if( !texts.containsKey(l) )
+            if( !texts.containsKey(t) )
                 addList.add(t);
             objectCount++;
 		}
@@ -514,7 +514,7 @@ public class GameArena
 
             // Add this ball to the draw list. Initially, with a null JavaFX entry, which we'll fill in later to avoid cross-thread operations...
             removeList.remove(r);
-            if( !rectangles.containsKey(l) )
+            if( !rectangles.containsKey(r) )
                 addList.add(r);
             objectCount++;
 		}
