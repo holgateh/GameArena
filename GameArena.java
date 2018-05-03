@@ -357,7 +357,7 @@ public class GameArena
      * @return The number of objects ready to render
      */
 	public int getObjectCount() {
-	    return balls.size() + texts.size() + rectangles.size() + balls.size() + addList.size();
+	    return balls.size() + texts.size() + rectangles.size() + lines.size() + addList.size();
     }
 	
 	/**
