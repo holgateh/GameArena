@@ -23,6 +23,8 @@ import java.awt.event.WindowEvent;
  * Instances of the Ball and Rectangle classes can be added to an instance of this class to
  * draw and animate simple shapes on the screen. 
  *
+ * <b>Note: Patched to prevent mulitple render objects with the same key, thus losing the render object reference</b>
+ *
  * @see Ball
  * @see Rectangle
  *
@@ -374,7 +376,8 @@ public class GameArena
 
             // Add this ball to the draw list. Initially, with a null JavaFX entry, which we'll fill in later to avoid cross-thread operations...
             removeList.remove(b);
-            addList.add(b);
+            if( !balls.containsKey(l) )
+                addList.add(b);
             objectCount++;
 		}
 	}
@@ -419,7 +422,8 @@ public class GameArena
 
             // Add this ball to the draw list. Initially, with a null JavaFX entry, which we'll fill in later to avoid cross-thread operations...
             removeList.remove(l);
-            addList.add(l);
+			if( !lines.containsKey(l) )
+                addList.add(l);
             objectCount++;
 		}
 	}
@@ -464,7 +468,8 @@ public class GameArena
 
             // Add this ball to the draw list. Initially, with a null JavaFX entry, which we'll fill in later to avoid cross-thread operations...
             removeList.remove(t);
-            addList.add(t);
+            if( !texts.containsKey(l) )
+                addList.add(t);
             objectCount++;
 		}
 	}
@@ -509,7 +514,8 @@ public class GameArena
 
             // Add this ball to the draw list. Initially, with a null JavaFX entry, which we'll fill in later to avoid cross-thread operations...
             removeList.remove(r);
-            addList.add(r);
+            if( !rectangles.containsKey(l) )
+                addList.add(r);
             objectCount++;
 		}
 	}
