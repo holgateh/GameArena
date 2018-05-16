@@ -332,6 +332,7 @@ public class GameArena
 
             text.setX(t.getXPosition());
             text.setY(t.getYPosition());
+            text.setText(t.getText());
             text.setFont(javafx.scene.text.Font.font ("Verdana",t.getSize()));
             text.setFill(getColourFromString(t.getColour()));
         }
