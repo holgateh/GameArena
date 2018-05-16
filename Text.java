@@ -133,7 +133,7 @@ public class Text
      * @param s The text to display
      * @param x The X co-ordinate in the GameArena where this Text will initially be located.
      * @param y The Y co-ordinate in the GameArena where this Text will initially be located.
-     * @param s The size of the Text in pixels.
+     * @param diameter The size of the Text in pixels.
      * @param col. The colour of the Text. @see setColour for a description of permissable colours.
      *
      */

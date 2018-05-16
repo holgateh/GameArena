@@ -133,10 +133,10 @@ public class Line
      *
      * Constructor. Create a new instance of a Line.
      *
-     * @param startx The X co-ordinate in the GameArena where this Line will start.
-     * @param starty The Y co-ordinate in the GameArena where this Line will start.
-     * @param endx The X co-ordinate in the GameArena where this Line will end.
-     * @param endy The Y co-ordinate in the GameArena where this Line will end.
+     * @param startX The X co-ordinate in the GameArena where this Line will start.
+     * @param startY The Y co-ordinate in the GameArena where this Line will start.
+     * @param endX The X co-ordinate in the GameArena where this Line will end.
+     * @param endY The Y co-ordinate in the GameArena where this Line will end.
      * @param w The thickness of this line, in pixels
      * @param col. The colour of the Line. @see setColour for a description of permissable colours.
      *
