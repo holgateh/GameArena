@@ -58,9 +58,12 @@ public class MrSnakey
             System.out.println("-------- " + snake.getLength() + "-------- ");
 
             snake.removeFromScreen();
+            
             for (int i=0; i<amountOfFood; i++)
             {
-                food[i].removeFromScreen();
+                if (food[i] != null)
+                    food[i].removeFromScreen();
+
                 food[i] = null;
             }
         }
