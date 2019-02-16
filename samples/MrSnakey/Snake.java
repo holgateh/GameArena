@@ -1,7 +1,7 @@
 public class Snake
 {
     public static final double MOVEMENT_SPEED = 4.0;
-    public static final int MAXIMUM_SEGMENTS = 500;
+    public static final int MAXIMUM_SEGMENTS = 5000;
     public static final int INITIAL_SEGMENTS = 4;
 
 

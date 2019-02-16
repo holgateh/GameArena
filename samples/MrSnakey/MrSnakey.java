@@ -1,9 +1,12 @@
 public class MrSnakey
 {
+    public static int MAXIMUM_AMOUNT_OF_FOOD = 8;
+
     private GameArena arena = new GameArena(1000,1000);
     private Snake snake;
-    private Food food;
-
+    private Food[] food = new Food[MAXIMUM_AMOUNT_OF_FOOD];
+    private int amountOfFood = 1;
+    private int score;
     public MrSnakey()
     {
         boolean playing = true;
@@ -11,8 +14,10 @@ public class MrSnakey
         while(true)
         {
             snake = new Snake(250,250,arena);
-            food = new Food(arena);       
+           
             playing = true;
+            score = 0;
+            amountOfFood = 1;
 
             while(playing)
             {
@@ -27,12 +32,21 @@ public class MrSnakey
 
                 snake.move();
 
-                if (snake.collides(food))
-                {
-                    snake.grow(food.getPoints());
-                    food.removeFromScreen();
-                    food = new Food(arena);
-                }
+                for (int i=0; i<amountOfFood; i++)
+                {               
+                    if (food[i] == null)
+                        food[i] = new Food(arena);
+
+                    if (snake.collides(food[i]))
+                    {
+                        score += food[i].getPoints();
+                        snake.grow(food[i].getPoints());
+                        food[i].removeFromScreen();
+                        food[i] = null;
+                    }
+                }  
+
+                amountOfFood = Math.min(1 + score / 25, MAXIMUM_AMOUNT_OF_FOOD);
 
                 if (snake.hasCrashed())
                     playing = false;
@@ -44,7 +58,11 @@ public class MrSnakey
             System.out.println("-------- " + snake.getLength() + "-------- ");
 
             snake.removeFromScreen();
-            food.removeFromScreen();
+            for (int i=0; i<amountOfFood; i++)
+            {
+                food[i].removeFromScreen();
+                food[i] = null;
+            }
         }
     }
 
