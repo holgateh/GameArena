@@ -17,6 +17,8 @@ import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
 
 import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionListener;
 import java.awt.event.WindowEvent;
 
 /**
@@ -32,7 +34,7 @@ import java.awt.event.WindowEvent;
  *
  * @author Joe Finney
  */
-public class GameArena implements MouseInputListener
+public class GameArena
 {
 	// Size of window
 	private int arenaWidth;
@@ -167,8 +169,46 @@ public class GameArena implements MouseInputListener
         scene.setOnKeyPressed(keyDownHandler);
         scene.setOnKeyReleased(keyUpHandler);
 
-        jfxPanel.addMouseListener(this);
-        jfxPanel.addMouseMotionListener(this);
+        jfxPanel.addMouseListener(new MouseListener()
+        {
+            public void mousePressed(MouseEvent e) {
+                if (e.getButton() == MouseEvent.BUTTON1)
+                    leftMouseButtonPressed = true;
+        
+                if (e.getButton() == MouseEvent.BUTTON3)
+                    rightMouseButtonPressed = true;
+            }
+         
+            public void mouseReleased(MouseEvent e) {
+                if (e.getButton() == MouseEvent.BUTTON1)
+                    leftMouseButtonPressed = false;
+        
+                if (e.getButton() == MouseEvent.BUTTON3)
+                    rightMouseButtonPressed = false;
+            }
+            
+            public void mouseEntered(MouseEvent e) {
+            }
+         
+            public void mouseExited(MouseEvent e) {
+            }
+         
+            public void mouseClicked(MouseEvent e) {
+            }
+        });
+        
+        jfxPanel.addMouseMotionListener(new MouseMotionListener()
+        {
+            public void mouseMoved(MouseEvent e) {
+                mouseX = (int) e.getPoint().getX();
+                mouseY = (int) e.getPoint().getY();
+            }
+        
+            public void mouseDragged(MouseEvent e) {
+                mouseX = (int) e.getPoint().getX();
+                mouseY = (int) e.getPoint().getY();
+            }
+        });
 
         jfxPanel.setScene(scene);
 
@@ -546,41 +586,6 @@ public class GameArena implements MouseInputListener
             removeList.add(r);
 		}
 	}
-
-    public void mousePressed(MouseEvent e) {
-        if (e.getButton() == MouseEvent.BUTTON1)
-            this.leftMouseButtonPressed = true;
-
-        if (e.getButton() == MouseEvent.BUTTON3)
-            this.rightMouseButtonPressed = true;
-    }
- 
-    public void mouseReleased(MouseEvent e) {
-        if (e.getButton() == MouseEvent.BUTTON1)
-            this.leftMouseButtonPressed = false;
-
-        if (e.getButton() == MouseEvent.BUTTON3)
-            this.rightMouseButtonPressed = false;
-    }
- 
-    public void mouseMoved(MouseEvent e) {
-        this.mouseX = (int) e.getPoint().getX();
-        this.mouseY = (int) e.getPoint().getY();
-    }
-    
-    public void mouseEntered(MouseEvent e) {
-    }
- 
-    public void mouseExited(MouseEvent e) {
-    }
- 
-    public void mouseClicked(MouseEvent e) {
-    }
-
-    public void mouseDragged(MouseEvent e) {
-        this.mouseX = (int) e.getPoint().getX();
-        this.mouseY = (int) e.getPoint().getY();
-    }
 
 
   	/**
