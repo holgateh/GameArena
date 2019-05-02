@@ -4,6 +4,7 @@ import java.util.concurrent.locks.*;
 import javafx.scene.input.KeyEvent;
 
 import javax.swing.JFrame;
+import javax.swing.event.MouseInputListener;
 import javax.swing.SwingUtilities;
 import javafx.application.Platform;
 import javafx.animation.AnimationTimer;
@@ -15,6 +16,7 @@ import javafx.scene.layout.*;
 import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
 
+import java.awt.event.MouseEvent;
 import java.awt.event.WindowEvent;
 
 /**
@@ -30,7 +32,7 @@ import java.awt.event.WindowEvent;
  *
  * @author Joe Finney
  */
-public class GameArena 
+public class GameArena implements MouseInputListener
 {
 	// Size of window
 	private int arenaWidth;
@@ -54,6 +56,12 @@ public class GameArena
 	private boolean left = false;
 	private boolean right = false;
 	private boolean space = false;
+
+    // Mouse state
+    private boolean leftMouseButtonPressed = false;
+    private boolean rightMouseButtonPressed = false;
+    private int mouseX = 0;
+    private int mouseY = 0;
 
     // JavaFX containers
     private Scene scene;
@@ -158,6 +166,9 @@ public class GameArena
 
         scene.setOnKeyPressed(keyDownHandler);
         scene.setOnKeyReleased(keyUpHandler);
+
+        jfxPanel.addMouseListener(this);
+        jfxPanel.addMouseMotionListener(this);
 
         jfxPanel.setScene(scene);
 
@@ -536,6 +547,42 @@ public class GameArena
 		}
 	}
 
+    public void mousePressed(MouseEvent e) {
+        if (e.getButton() == MouseEvent.BUTTON1)
+            this.leftMouseButtonPressed = true;
+
+        if (e.getButton() == MouseEvent.BUTTON3)
+            this.rightMouseButtonPressed = true;
+    }
+ 
+    public void mouseReleased(MouseEvent e) {
+        if (e.getButton() == MouseEvent.BUTTON1)
+            this.leftMouseButtonPressed = false;
+
+        if (e.getButton() == MouseEvent.BUTTON3)
+            this.rightMouseButtonPressed = false;
+    }
+ 
+    public void mouseMoved(MouseEvent e) {
+        this.mouseX = (int) e.getPoint().getX();
+        this.mouseY = (int) e.getPoint().getY();
+    }
+    
+    public void mouseEntered(MouseEvent e) {
+    }
+ 
+    public void mouseExited(MouseEvent e) {
+    }
+ 
+    public void mouseClicked(MouseEvent e) {
+    }
+
+    public void mouseDragged(MouseEvent e) {
+        this.mouseX = (int) e.getPoint().getX();
+        this.mouseY = (int) e.getPoint().getY();
+    }
+
+
   	/**
      * Update the window to reflect all graphical objects added to this GameArena.
      *
@@ -634,4 +681,42 @@ public class GameArena
     {
         return jfxPanel;
     }
+
+    /** 
+	 * Determines if the user is currently pressing the left mouse button.
+	 * @return true if the left mouse button is pressed, false otherwise.
+	 */
+	public boolean leftMousePressed()
+	{
+		return leftMouseButtonPressed;
+	}
+
+    /** 
+	 * Determines if the user is currently pressing the right mouse button.
+	 * @return true if the right mouse button is pressed, false otherwise.
+	 */
+	public boolean rightMousePressed()
+	{
+		return rightMouseButtonPressed;
+    }
+    
+    /** 
+	 * Determines the current X coordinate of the mouse pointer.
+	 * @return the  mouse pointer's X coordinate.
+	 */
+	public int getMouseX()
+	{
+		return mouseX;
+    }
+    
+    /** 
+	 * Determines the current Y coordinate of the mouse pointer.
+	 * @return the  mouse pointer's Y coordinate.
+	 */
+	public int getMouseY()
+	{
+		return mouseY;
+	}
+
+
 }
