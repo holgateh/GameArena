@@ -117,11 +117,11 @@ public class Ball
      * @param col. The colour of the Ball. @see setColour for a description of permissable colours.
      *
      */
-    public Ball(double x, double y, double diameter, String col)
+    public Ball(double x, double y, double radius, String col)
     {
         xPosition = x;
         yPosition = y;
-        size = diameter;
+        size = radius;
         colour = col;
     }    
 }
